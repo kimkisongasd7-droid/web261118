@@ -111,8 +111,8 @@ footer {
 
 
 
-
-
+.like { border: none; background: none; font-size: 1.4rem; color: #bbb; cursor: pointer;}
+.like.liked { color: crimson; }
 
 
 
@@ -135,12 +135,13 @@ footer {
     .hero h2 {
         font-size: 3rem;
     }
-    .board{
-        grid-template-columns: repeat(6, 1fr);
-    }
+    
   
 }
 
- .card.hot .badge { background: crimson; color: #fff; }
+.card.hot .badge { background: crimson; color: #fff; }
 
- .toolbar { display: flex; align-items: center; gap: 12px; color: #fff; }
+.toolbar { display: flex; align-items: center; gap: 12px; color: #fff; }
+
+.state-empty { display: none; color: #fff; }
+.board.is-empty + .state-empty { display: block; }

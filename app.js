@@ -74,15 +74,18 @@ const renderCards = (list) => {
             card.classList.add("hot");
         }
         card.innerHTML = `
- <img class="poster" src="${posterUrl(m.poster, "w342")}" alt="${m.title} 포스터">
- <span class="badge">${m.rating}</span>
- <div class="info">
-    <h2>${m.title}</h2>
-    <p class="year">${m.year}</p>
- </div>`;
+           <img class="poster" src="${posterUrl(m.poster, "w342")}" alt="${m.title} 포스터">
+           <span class="badge">${m.rating}</span>
+           <div class="info">
+           <h2>${m.title}</h2>
+           <p class="year">${m.year}</p>
+           <button class="like" type="button">♥</button>
+           </div>`;
         board.appendChild(card);
         document.querySelector("#count").textContent = list.length + "편";
+        updateLikeCount();
     }
+    if (list.length === 0) { board.classList.add("is-empty"); } else { board.classList.remove("is-empty"); }
 }
 
 const sortBy = (list, key, desc) => {
@@ -98,8 +101,7 @@ const sortBy = (list, key, desc) => {
 
 
 const applySort = () => {
-    const key = document.getElementById("sort").value;
-    renderCards(sortBy(movies, key, key !== "title"));
+    renderCards(getView());
 }
 
 applySort();
@@ -112,3 +114,38 @@ applySort();
 
 
 
+document.getElementById("q").addEventListener("input", (e) => {
+    renderCards(getView());
+});
+
+
+
+function getView() {
+    const keyword = document.getElementById("q").value.trim().toLowerCase();
+    const found = movies.filter(m => m.title.toLowerCase().includes(keyword));
+    const key = document.getElementById("sort").value;
+    return sortBy(found, key, key !== "title");
+}
+
+document.getElementById("sort").addEventListener("change", applySort);
+
+
+
+
+
+
+
+// 화살표 없는 함수의 this는 리스너가 달린 보드(.board)를 가리키고, 화살표 함수의 this는 상위 객체(window)를 가리킴
+// e.target은 내가 실제로 클릭한 요소를 가리킴
+document.querySelector(".board").addEventListener("click", (e) => { 
+    if (e.target.classList.contains("like")) { 
+        e.target.classList.toggle("liked"); 
+        updateLikeCount(); 
+    } 
+});
+
+
+function updateLikeCount() { document.getElementById("likeCount").textContent = document.querySelectorAll(".liked").length; }
+
+
+document.getElementById("q").addEventListener("keydown", (e) => { if (e.key === "Escape") { e.target.value = ""; renderCards(getView()); } });
